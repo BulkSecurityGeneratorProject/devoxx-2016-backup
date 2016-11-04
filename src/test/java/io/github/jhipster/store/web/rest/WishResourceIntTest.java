@@ -3,9 +3,7 @@ package io.github.jhipster.store.web.rest;
 import io.github.jhipster.store.StoreApp;
 
 import io.github.jhipster.store.domain.Wish;
-import io.github.jhipster.store.domain.WishList;
 import io.github.jhipster.store.repository.WishRepository;
-import io.github.jhipster.store.service.UserServiceIntTest;
 import io.github.jhipster.store.service.WishService;
 
 import org.junit.Before;
@@ -17,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
@@ -41,7 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = StoreApp.class)
-@WithMockUser("test")
 public class WishResourceIntTest {
 
     private static final Long DEFAULT_PRODUCT_ID = 1L;
@@ -86,12 +82,9 @@ public class WishResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static Wish createEntity(EntityManager em) {
-        WishList wishList = WishListResourceIntTest.createEntity(em);
-        em.persist(wishList);
         Wish wish = new Wish()
                 .productId(DEFAULT_PRODUCT_ID)
-                .price(DEFAULT_PRICE)
-                .wishList(wishList);
+                .price(DEFAULT_PRICE);
         return wish;
     }
 

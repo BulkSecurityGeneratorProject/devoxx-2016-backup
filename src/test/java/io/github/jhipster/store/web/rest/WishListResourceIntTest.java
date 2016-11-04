@@ -2,10 +2,8 @@ package io.github.jhipster.store.web.rest;
 
 import io.github.jhipster.store.StoreApp;
 
-import io.github.jhipster.store.domain.User;
 import io.github.jhipster.store.domain.WishList;
 import io.github.jhipster.store.repository.WishListRepository;
-import io.github.jhipster.store.service.UserService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
@@ -46,7 +43,7 @@ public class WishListResourceIntTest {
     private static final String DEFAULT_NAME = "AAAAA";
     private static final String UPDATED_NAME = "BBBBB";
 
-    private static final LocalDate DEFAULT_CREATION_DATE = LocalDate.now();
+    private static final LocalDate DEFAULT_CREATION_DATE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_CREATION_DATE = LocalDate.now(ZoneId.systemDefault());
 
     private static final Boolean DEFAULT_HIDDEN = false;
@@ -64,9 +61,6 @@ public class WishListResourceIntTest {
     @Inject
     private EntityManager em;
 
-    @Inject
-    private UserService userService;
-
     private MockMvc restWishListMockMvc;
 
     private WishList wishList;
@@ -76,7 +70,6 @@ public class WishListResourceIntTest {
         MockitoAnnotations.initMocks(this);
         WishListResource wishListResource = new WishListResource();
         ReflectionTestUtils.setField(wishListResource, "wishListRepository", wishListRepository);
-        ReflectionTestUtils.setField(wishListResource, "userService", userService);
         this.restWishListMockMvc = MockMvcBuilders.standaloneSetup(wishListResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -89,12 +82,10 @@ public class WishListResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static WishList createEntity(EntityManager em) {
-        User user = UserResourceIntTest.createEntity(em);
         WishList wishList = new WishList()
                 .name(DEFAULT_NAME)
                 .creationDate(DEFAULT_CREATION_DATE)
-                .hidden(DEFAULT_HIDDEN)
-                .user(user);
+                .hidden(DEFAULT_HIDDEN);
         return wishList;
     }
 
@@ -144,7 +135,6 @@ public class WishListResourceIntTest {
 
     @Test
     @Transactional
-    @WithMockUser("test")
     public void getAllWishLists() throws Exception {
         // Initialize the database
         wishListRepository.saveAndFlush(wishList);
