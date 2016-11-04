@@ -18,7 +18,7 @@
     "enableSocialSignIn": false,
     "jwtSecretKey": "553e871c95c14bccaeba07caad841708888c39b7",
     "useSass": false,
-    "applicationType": "monolith",
+    "applicationType": "gateway",
     "testFrameworks": [
       "gatling"
     ],
